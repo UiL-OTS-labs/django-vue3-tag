@@ -44,13 +44,21 @@ def event_prop(name):
 def vue(parser, token):
     args = token.split_contents()
 
+    # because we install components in a div by default, there's an option
+    # to specify an inline display style when required by adding the word
+    # 'inline' in the tag argument list
     inline = False
     if 'inline' in args:
         args.remove('inline')
         inline = True
 
-    component = args[1]
+    # in props we store (per prop) a fucntion that takes a context
+    # and returns the prop value.
+    # this is achieved by using partial() together with the prop_* functions
+    # defined above.
     props = dict()
+
+    component = args[1]
     for i in range(2, len(args)):
         if args[i][0] == ':':
             # prop binding
@@ -69,7 +77,7 @@ def vue(parser, token):
 
         elif args[i][0] == '@':
             (name, value) = args[i][1:].split('=', 1)
-            # @event=thing
+            # @event="thing", thing should be a javascript function
             props[event_prop(name)] = partial(prop_js, value[1:-1])
         else:
             (name, value) = args[i].split('=', 1)
