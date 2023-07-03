@@ -109,9 +109,12 @@ class VueRenderer(template.Node):
 
         style = 'display:inline' if self.inline else 'width:100%'
 
+        if hasattr(context.request, 'csp_nonce'):
+            nonce = context.request.csp_nonce
+
         return format_html('''
         <div id="{container}" style="{style}"></div>
-        <script>
+        <script nonce="{nonce}">
         (function() {{
         let data = {{}};
         {binding}
@@ -121,4 +124,5 @@ class VueRenderer(template.Node):
                            binding=binding,
                            component=self.component,
                            container=container,
-                           style=style)
+                           style=style,
+                           nonce=nonce)
