@@ -109,6 +109,7 @@ class VueRenderer(template.Node):
 
         style = 'display:inline' if self.inline else 'width:100%'
 
+        nonce = ''
         if hasattr(context.request, 'csp_nonce'):
             nonce = context.request.csp_nonce
 
