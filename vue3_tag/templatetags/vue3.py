@@ -29,7 +29,11 @@ def prop_const(const, context):
 
 def prop_variable(expr, context):
     var = template.Variable(expr)
-    return json.dumps(var.resolve(context), cls=VueJSONEncoder)
+    value = var.resolve(context)
+    if hasattr(value, '_proxy____args'):
+        # lazily translated string
+        value = str(value)
+    return json.dumps(value, cls=VueJSONEncoder)
 
 
 def prop_js(code, context):
