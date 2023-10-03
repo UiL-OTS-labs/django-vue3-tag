@@ -76,7 +76,7 @@ def vue(parser, token):
                     props[name] = partial(prop_variable, value)
             else:
                 name = args[i][1:]
-                # :prop, is the smae as :prop=prop (treat prop as a python value)
+                # :prop, is the same as :prop=prop (treat prop as a python value)
                 props[name] = partial(prop_variable, name)
 
         elif args[i][0] == '@':
@@ -113,21 +113,25 @@ class VueRenderer(template.Node):
 
         style = 'display:inline' if self.inline else 'width:100%'
 
+        # Retrieve the CSP nonce if present
         nonce = ''
-        if hasattr(context.request, 'csp_nonce'):
+        if hasattr(context, 'request') and hasattr(context.request,
+                                                   'csp_nonce'):
             nonce = context.request.csp_nonce
 
-        return format_html('''
-        <div id="{container}" style="{style}"></div>
-        <script nonce="{nonce}">
-        (function() {{
-        let data = {{}};
-        {binding}
-            createApp({component}, data).mount('#{container}')
-        }})();
-        </script>''',
-                           binding=binding,
-                           component=self.component,
-                           container=container,
-                           style=style,
-                           nonce=nonce)
+        return format_html(
+            '''
+            <div id="{container}" style="{style}"></div>
+            <script nonce="{nonce}">
+            (function() {{
+            let data = {{}};
+            {binding}
+                createApp({component}, data).mount('#{container}')
+            }})();
+            </script>''',
+            binding=binding,
+            component=self.component,
+            container=container,
+            style=style,
+            nonce=nonce,
+        )
