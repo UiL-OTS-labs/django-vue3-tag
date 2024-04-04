@@ -116,7 +116,9 @@ class VueRenderer(template.Node):
 
         # Retrieve the CSP nonce if present
         nonce = ''
-        if hasattr(context, 'request') and hasattr(context.request,
+        if 'nonce' in context:
+            nonce = context['nonce']
+        elif hasattr(context, 'request') and hasattr(context.request,
                                                    'csp_nonce'):
             nonce = context.request.csp_nonce
 
