@@ -156,7 +156,7 @@ def vue_assets():
             for css in asset['css']:
                 out.append('<link rel="stylesheet" href="{}"/>'.format(
                            static + css))
-            out.append('<script type="text/javascript" src="{}"></script>'.format(
+            out.append('<script type="module" src="{}"></script>'.format(
                        static + asset['file']))
 
     return format_html('\n'.join(out))
